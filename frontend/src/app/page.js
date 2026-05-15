@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+// This checks if we are on Vercel. If so, it uses your Render link. 
+// Otherwise, it defaults to localhost for your local testing.
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function Home() {
     const [file, setFile] = useState(null);
     const [jd, setJd] = useState("");
@@ -21,7 +25,8 @@ export default function Home() {
             // Step A: Upload Resume
             const resumeData = new FormData();
             resumeData.append("file", file);
-            const resumeRes = await fetch("http://localhost:8000/upload-resume", {
+            // Updated to use the variable instead of hardcoded localhost
+            const resumeRes = await fetch(`${API_BASE_URL}/upload-resume`, {
                 method: "POST",
                 body: resumeData,
             });
@@ -33,7 +38,8 @@ export default function Home() {
             // Step B: Submit JD
             const jdData = new FormData();
             jdData.append("jd", jd);
-            const jdRes = await fetch("http://localhost:8000/submit-jd", {
+            // Updated to use the variable instead of hardcoded localhost
+            const jdRes = await fetch(`${API_BASE_URL}/submit-jd`, {
                 method: "POST",
                 body: jdData,
             });
@@ -42,8 +48,6 @@ export default function Home() {
 
             setStatus("Success! Redirecting to Interview...");
 
-            // Step C: AUTOMATIC REDIRECT
-            // Using window.location.href to avoid build-time module resolution issues in this environment
             window.location.href = "/interview";
         } catch (error) {
             console.error(error);
@@ -54,7 +58,7 @@ export default function Home() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100">
+        <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100 text-black">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-center text-blue-800">Welcome</h1>
 
@@ -72,7 +76,7 @@ export default function Home() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Job Description</label>
                     <textarea
                         rows="4"
-                        className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black"
+                        className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder="Paste the job requirements here..."
                         value={jd}
                         onChange={(e) => setJd(e.target.value)}
