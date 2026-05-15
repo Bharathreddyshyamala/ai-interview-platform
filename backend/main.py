@@ -16,9 +16,15 @@ load_dotenv()
 app = FastAPI(title="AI Interview Platform")
 
 # 2. CORS - Ensure this matches your frontend URL
+origins = [
+    "http://localhost:3000",
+    "https://ai-interview-platform-ten-tau.vercel.app",
+    # If you have other Vercel preview links, add them here too
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,  # Use the list we just made
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
